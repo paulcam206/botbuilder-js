@@ -4,6 +4,7 @@
  */
 
 export * from './activityInterfaces';
+export * from './activityEx';
 export { CallerIdConstants } from './callerIdConstants';
 export { HealthCheckResponse, HealthResults } from './healthCheck';
 export { SpeechConstants } from './speechConstants';
@@ -250,6 +251,10 @@ export interface Entity {
    * Type of this entity (RFC 3987 IRI)
    */
   type: string;
+  /**
+   * Additional properties.
+   */
+  [key: string]: any;
 }
 
 /**

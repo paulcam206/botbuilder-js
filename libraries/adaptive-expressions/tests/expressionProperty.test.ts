@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import * as assert from 'assert';
 import { ArrayExpression, BoolExpression, EnumExpression, NumberExpression, ObjectExpression, StringExpression, ValueExpression, ExpressionParser } from '../lib';
 
@@ -88,7 +87,7 @@ describe('expressionProperty tests', () => {
         assert.equal(result, TestEnum.Three);
     });
 
-    it('NumberExpression', function() {
+    it('NumberExpression', function () {
         const data = { test: 3.14 };
 
         let val = new NumberExpression('test');
@@ -161,6 +160,16 @@ describe('expressionProperty tests', () => {
         result = str.getValue(data);
         assert.equal(result, 'joe');
         assert.equal(str.toExpression().toString(), 'test');
+
+        // slashes are the chars
+        str = new StringExpression('c:\\test\\test\\test');
+        result = str.getValue(data);
+        assert.equal(result, 'c:\\test\\test\\test');
+
+        // tabs are the chars
+        str = new StringExpression('c:\test\test\test');
+        result = str.getValue(data);
+        assert.equal(result, 'c:\test\test\test');
     });
 
     it('ValueExpression', () => {
@@ -195,5 +204,15 @@ describe('expressionProperty tests', () => {
         result = val.getValue(data);
         assert.equal(result, undefined);
         assert.equal(val.toExpression().toString(), 'null');
+
+        // slashes are the chars
+        val = new ValueExpression('c:\\test\\test\\test');
+        result = val.getValue(data);
+        assert.equal(result, 'c:\\test\\test\\test');
+
+        // tabs are the chars
+        val = new ValueExpression('c:\test\test\test');
+        result = val.getValue(data);
+        assert.equal(result, 'c:\test\test\test');
     });
 });

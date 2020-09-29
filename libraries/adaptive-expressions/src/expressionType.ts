@@ -105,6 +105,10 @@ export class ExpressionType {
     public static readonly IsTimeRange: string = 'isTimeRange';
     public static readonly IsDateRange: string = 'isDateRange';
     public static readonly IsPresent: string = 'isPresent';
+    public static readonly GetNextViableDate: string = 'getNextViableDate';
+    public static readonly GetPreviousViableDate: string = 'getPreviousViableDate';
+    public static readonly GetNextViableTime: string = 'getNextViableTime';
+    public static readonly GetPreviousViableTime: string = 'getPreviousViableTime';
 
     // Conversions
     public static readonly Float: string = 'float';
@@ -121,6 +125,7 @@ export class ExpressionType {
     public static readonly UriComponent: string = 'uriComponent';
     public static readonly UriComponentToString: string = 'uriComponentToString';
     public static readonly FormatNumber: string = 'formatNumber';
+    public static readonly JsonStringify: string = 'jsonStringify';
 
     // Memory
     public static readonly Accessor: string = 'Accessor';
