@@ -6,7 +6,7 @@
  * Licensed under the MIT License.
  */
 import { DialogTurnResult, DialogContext, Dialog, TurnPath, DialogEvents } from 'botbuilder-dialogs';
-import { StringExpression, BoolExpression, ValueExpression } from 'adaptive-expressions';
+import { StringExpression, BoolExpression, ValueExpression, StringExpressionConverter, ValueExpressionConverter, BoolExpressionConverter } from 'adaptive-expressions';
 
 
 export class CancelAllDialogsBase<O extends object = {}> extends Dialog<O> {
@@ -44,11 +44,17 @@ export class CancelAllDialogsBase<O extends object = {}> extends Dialog<O> {
      */
     public activityProcessed: BoolExpression = new BoolExpression(true);
 
-
     /**
      * A value indicating whether to cancel all dialogs.
      */
     public cancelAll: boolean;
+
+    public converters = {
+        'eventName': new StringExpressionConverter(),
+        'eventValue': new ValueExpressionConverter(),
+        'disabled': new BoolExpressionConverter(),
+        'activityProcessed': new BoolExpressionConverter()
+    };
 
     public async beginDialog(dc: DialogContext, options: O): Promise<DialogTurnResult> {
         if (this.disabled && this.disabled.getValue(dc.state)) {

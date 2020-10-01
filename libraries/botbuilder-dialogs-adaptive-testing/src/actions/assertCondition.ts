@@ -7,9 +7,11 @@
  */
 
 import { Dialog, DialogContext, DialogTurnResult } from 'botbuilder-dialogs';
-import { Expression, StringExpression } from 'adaptive-expressions';
+import { Expression, ExpressionConverter, StringExpression, StringExpressionConverter } from 'adaptive-expressions';
 
 export class AssertCondition<O extends object = {}> extends Dialog<O> {
+    public static $kind = 'Microsoft.Test.AssertCondition';
+
     /**
      * Condition which must be true.
      */
@@ -19,6 +21,11 @@ export class AssertCondition<O extends object = {}> extends Dialog<O> {
      * Description of assertion.
      */
     public description: StringExpression;
+
+    public converters = {
+        'condition': new ExpressionConverter(),
+        'description': new StringExpressionConverter()
+    };
 
     public async beginDialog(dc: DialogContext, options?: O): Promise<DialogTurnResult> {
         const { value } = this.condition.tryEvaluate(dc.state);

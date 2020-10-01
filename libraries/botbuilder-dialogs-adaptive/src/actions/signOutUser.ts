@@ -6,9 +6,11 @@
  * Licensed under the MIT License.
  */
 import { Dialog, DialogContext, DialogTurnResult } from 'botbuilder-dialogs';
-import { StringExpression, BoolExpression } from 'adaptive-expressions';
+import { StringExpression, BoolExpression, BoolExpressionConverter, StringExpressionConverter } from 'adaptive-expressions';
 
 export class SignOutUser<O extends object = {}> extends Dialog<O> {
+    public static $kind = 'Microsoft.SignOutUser';
+
     public constructor();
     public constructor(userId?: string, connectionName?: string) {
         super();
@@ -30,6 +32,12 @@ export class SignOutUser<O extends object = {}> extends Dialog<O> {
      * An optional expression which if is true will disable this action.
      */
     public disabled?: BoolExpression;
+
+    public converters = {
+        'userId': new StringExpressionConverter(),
+        'connectionName': new StringExpressionConverter(),
+        'disabled': new BoolExpressionConverter()
+    };
 
     public async beginDialog(dc: DialogContext, options?: O): Promise<DialogTurnResult> {
         if (this.disabled && this.disabled.getValue(dc.state)) {

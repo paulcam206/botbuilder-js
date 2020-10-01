@@ -11,10 +11,14 @@ import { TestAction } from '../testAction';
 import { AdaptiveTestAdapter } from '../adaptiveTestAdapter';
 
 export class UserTyping implements TestAction {
+    public static $kind = 'Microsoft.Test.UserTyping';
+
     /**
      * If user is set then the channalAccount.id and channelAccount.name will be from user.
      */
     public user: string;
+
+    public converters = {};
 
     public async execute(testAdapter: AdaptiveTestAdapter, callback: (context: TurnContext) => Promise<any>): Promise<any> {
         const typing = testAdapter.makeActivity();

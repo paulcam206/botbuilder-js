@@ -8,7 +8,7 @@
 import { Attachment } from 'botbuilder-core';
 import { DialogContext } from 'botbuilder-dialogs';
 import { InputDialog, InputState } from './inputDialog';
-import { EnumExpression } from 'adaptive-expressions';
+import { EnumExpression, EnumExpressionConverter } from 'adaptive-expressions';
 
 export enum AttachmentOutputFormat {
     all = 'all',
@@ -16,8 +16,15 @@ export enum AttachmentOutputFormat {
 }
 
 export class AttachmentInput extends InputDialog {
+    public static $kind = 'Microsoft.AttachmentInput';
 
     public outputFormat: EnumExpression<AttachmentOutputFormat> = new EnumExpression<AttachmentOutputFormat>(AttachmentOutputFormat.first);
+
+    public get converters() {
+        return Object.assign({}, super.converters, {
+            'outputFormat': new EnumExpressionConverter(AttachmentOutputFormat)
+        });
+    }
 
     protected onComputeId(): string {
         return `AttachmentInput[${ this.prompt && this.prompt.toString() }]`;

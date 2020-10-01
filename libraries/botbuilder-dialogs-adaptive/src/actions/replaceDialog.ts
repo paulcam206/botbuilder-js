@@ -7,9 +7,11 @@
  */
 import { DialogTurnResult, DialogContext, TurnPath } from 'botbuilder-dialogs';
 import { BaseInvokeDialog } from './baseInvokeDialog';
-import { BoolExpression } from 'adaptive-expressions';
+import { BoolExpression, BoolExpressionConverter } from 'adaptive-expressions';
 
 export class ReplaceDialog<O extends object = {}> extends BaseInvokeDialog<O> {
+    public static $kind = 'Microsoft.ReplaceDialog';
+
     /**
      * Creates a new `ReplaceWithDialog` instance.
      * @param dialogId ID of the dialog to goto.
@@ -25,6 +27,12 @@ export class ReplaceDialog<O extends object = {}> extends BaseInvokeDialog<O> {
      * An optional expression which if is true will disable this action.
      */
     public disabled?: BoolExpression;
+
+    public get converters() {
+        return Object.assign({}, super.converters, {
+            'disabled': new BoolExpressionConverter()
+        });
+    }
 
     public async beginDialog(dc: DialogContext, options?: O): Promise<DialogTurnResult> {
         if (this.disabled && this.disabled.getValue(dc.state)) {

@@ -8,12 +8,13 @@
 
 import { MemoryStorage, UserState, ConversationState } from 'botbuilder-core';
 import { DialogManager } from 'botbuilder-dialogs';
-import { DialogExpression, LanguageGeneratorExtensions, ResourceExtensions } from 'botbuilder-dialogs-adaptive';
+import { DialogExpression, DialogExpressionConverter, LanguageGeneratorExtensions, ResourceExtensions } from 'botbuilder-dialogs-adaptive';
 import { ResourceExplorer } from 'botbuilder-dialogs-declarative';
 import { TestAction } from './testAction';
 import { AdaptiveTestAdapter } from './adaptiveTestAdapter';
 
 export class TestScript {
+    public static $kind = 'Microsoft.Test.Script';
 
     /**
      * A description of the test sequence.
@@ -39,6 +40,10 @@ export class TestScript {
      * If true then trace activities will be sent to the test script.
      */
     public enableTrace: boolean = false;
+
+    public converters = {
+        'dialog': (resourceExplorer: ResourceExplorer) => new DialogExpressionConverter(resourceExplorer)
+    };
 
     /**
      * Starts the execution of the test sequence.

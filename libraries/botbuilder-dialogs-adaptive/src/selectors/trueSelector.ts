@@ -14,6 +14,8 @@ import { ActionContext } from '../actionContext';
  * Select all rules which evaluate to true.
  */
 export class TrueSelector implements TriggerSelector {
+    public static $kind = 'Microsoft.TrueSelector';
+
     private _conditionals: OnCondition[];
     private _evaluate: boolean;
 
@@ -21,6 +23,8 @@ export class TrueSelector implements TriggerSelector {
      * Gets or sets the expression parser to use.
      */
     public parser: ExpressionParserInterface = new ExpressionParser()
+
+    public converters = {};
 
     public initialize(conditionals: OnCondition[], evaluate: boolean): void {
         this._conditionals = conditionals;

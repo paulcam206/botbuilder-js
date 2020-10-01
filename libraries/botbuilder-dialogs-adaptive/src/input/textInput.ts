@@ -7,11 +7,18 @@
  */
 import { DialogContext } from 'botbuilder-dialogs';
 import { InputDialog, InputState } from './inputDialog';
-import { StringExpression } from 'adaptive-expressions';
+import { StringExpression, StringExpressionConverter } from 'adaptive-expressions';
 
 export class TextInput extends InputDialog {
+    public static $kind = 'Microsoft.TextInput';
 
     public outputFormat: StringExpression;
+
+    public get converters() {
+        return Object.assign({}, super.converters, {
+            'outputFormat': new StringExpressionConverter()
+        });
+    }
 
     protected onComputeId(): string {
         return `TextInput[${ this.prompt && this.prompt.toString() }]`;

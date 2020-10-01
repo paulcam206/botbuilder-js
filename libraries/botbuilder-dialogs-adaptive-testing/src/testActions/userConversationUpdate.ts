@@ -11,6 +11,8 @@ import { TestAction } from '../testAction';
 import { AdaptiveTestAdapter } from '../adaptiveTestAdapter';
 
 export class UserConversationUpdate implements TestAction {
+    public static $kind = 'Microsoft.Test.UserConversationUpdate';
+
     /**
      * The members added names.
      */
@@ -20,6 +22,8 @@ export class UserConversationUpdate implements TestAction {
      * The members removed names.
      */
     public membersRemoved: string[];
+    
+    public converters = {};
 
     public async execute(testAdapter: AdaptiveTestAdapter, callback: (context: TurnContext) => Promise<any>): Promise<any> {
         const activity = testAdapter.makeActivity();

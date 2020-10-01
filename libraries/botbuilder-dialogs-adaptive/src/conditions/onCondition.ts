@@ -6,7 +6,7 @@
  * Licensed under the MIT License.
  */
 import { Dialog, DialogDependencies, DialogStateManager } from 'botbuilder-dialogs';
-import { Expression, ExpressionParserInterface, Constant, ExpressionParser, ExpressionEvaluator, ReturnType, FunctionUtils } from 'adaptive-expressions';
+import { Expression, ExpressionParserInterface, Constant, ExpressionParser, ExpressionEvaluator, ReturnType, FunctionUtils, BoolExpressionConverter, IntExpressionConverter } from 'adaptive-expressions';
 import { ActionScope } from '../actions/actionScope';
 import { BoolExpression, IntExpression } from 'adaptive-expressions';
 import { AdaptiveDialog } from '../adaptiveDialog';
@@ -16,6 +16,8 @@ import { ActionState } from '../actionState';
 import { ActionChangeType } from '../actionChangeType';
 
 export class OnCondition implements DialogDependencies {
+    public static $kind = 'Microsoft.OnCondition';
+
     /**
      * Evaluates the rule and returns a predicted set of changes that should be applied to the
      * current plan.
@@ -69,6 +71,11 @@ export class OnCondition implements DialogDependencies {
         this.condition = condition ? new BoolExpression(condition) : undefined;
         this.actions = actions;
     }
+
+    public converters = {
+        'condition': new BoolExpressionConverter(),
+        'priority': new IntExpressionConverter()
+    };
 
     /**
      * Get the expression for this condition

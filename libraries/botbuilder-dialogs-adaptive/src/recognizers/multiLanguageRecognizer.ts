@@ -9,13 +9,21 @@
 import { RecognizerResult, Activity } from 'botbuilder-core';
 import { DialogContext } from 'botbuilder-dialogs';
 import { Recognizer } from './recognizer';
-import { LanguagePolicy } from '../languagePolicy';
+import { LanguagePolicy, LanguagePolicyConverter } from '../languagePolicy';
+import { ResourceExplorer } from 'botbuilder-dialogs-declarative';
+import { MultiLanguageRecognizerConverter } from '../converters';
 
 export class MultiLanguageRecognizer extends Recognizer {
+    public static $kind = 'Microsoft.MultiLanguageRecognizer';
 
     public languagePolicy: LanguagePolicy = new LanguagePolicy();
 
     public recognizers: { [locale: string]: Recognizer };
+
+    public converters = {
+        'languagePolicy': new LanguagePolicyConverter(),
+        'recognizers': (resourceExplorer: ResourceExplorer) => new MultiLanguageRecognizerConverter(resourceExplorer)
+    };
 
     public async recognize(dialogContext: DialogContext, activity: Activity, telemetryProperties?: { [key: string]: string }, telemetryMetrics?: { [key: string]: number }): Promise<RecognizerResult> {
         const locale = activity.locale || '';

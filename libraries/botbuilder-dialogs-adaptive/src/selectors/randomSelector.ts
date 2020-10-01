@@ -14,6 +14,8 @@ import { ActionContext } from '../actionContext';
  * Select a random true rule implementation of TriggerSelector.
  */
 export class RandomSelector implements TriggerSelector {
+    public static $kind = 'Microsoft.RandomSelector';
+
     private _conditionals: OnCondition[];
     private _evaluate: boolean;
 
@@ -21,6 +23,8 @@ export class RandomSelector implements TriggerSelector {
      * Gets or sets the expression parser to use.
      */
     public parser: ExpressionParserInterface = new ExpressionParser()
+    
+    public converters = {};
 
     public initialize(conditionals: OnCondition[], evaluate: boolean): void {
         this._conditionals = conditionals;

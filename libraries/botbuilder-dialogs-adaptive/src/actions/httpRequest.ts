@@ -10,10 +10,10 @@ import { Response, Headers } from 'node-fetch';
 import { DialogTurnResult, DialogContext, Dialog, Configurable } from 'botbuilder-dialogs';
 import { Converter } from 'botbuilder-dialogs-declarative';
 import { Activity } from 'botbuilder-core';
-import { ValueExpression, StringExpression, BoolExpression, EnumExpression } from 'adaptive-expressions';
+import { ValueExpression, StringExpression, BoolExpression, EnumExpression, BoolExpressionConverter, EnumExpressionConverter, StringExpressionConverter, ValueExpressionConverter } from 'adaptive-expressions';
 import { replaceJsonRecursively } from '../jsonExtensions';
 
-export class HttpHeadersConverter implements Converter {
+class HttpHeadersConverter implements Converter {
     public convert(value: object): { [key: string]: StringExpression } {
         const headers = {};
         for (const key in value) {
@@ -115,6 +115,8 @@ export class Result {
 }
 
 export class HttpRequest<O extends object = {}> extends Dialog<O> implements Configurable {
+    public static $kind = 'Microsoft.HttpRequest';
+
     public constructor();
     public constructor(method: HttpMethod, url: string, headers: { [key: string]: string }, body: any);
     public constructor(method?: HttpMethod, url?: string, headers?: { [key: string]: string }, body?: any) {
@@ -168,6 +170,16 @@ export class HttpRequest<O extends object = {}> extends Dialog<O> implements Con
      * An optional expression which if is true will disable this action.
      */
     public disabled?: BoolExpression;
+
+    public converters = {
+        'contentType': new StringExpressionConverter(),
+        'url': new StringExpressionConverter(),
+        'headers': new HttpHeadersConverter(),
+        'body': new ValueExpressionConverter(),
+        'responseType': new EnumExpressionConverter(ResponsesTypes),
+        'resultProperty': new StringExpressionConverter(),
+        'disabled': new BoolExpressionConverter()
+    };
 
     public async beginDialog(dc: DialogContext, options?: O): Promise<DialogTurnResult> {
         if (this.disabled && this.disabled.getValue(dc.state)) {

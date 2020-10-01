@@ -6,6 +6,6 @@
  * Licensed under the MIT License.
  */
 
-export interface Converter {
-    convert(value: any): any;
+export interface Converter<From = any, To = any>{
+    convert(value: From): To;
 }

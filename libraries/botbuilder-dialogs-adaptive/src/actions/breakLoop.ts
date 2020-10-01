@@ -7,13 +7,19 @@
  */
 import { DialogTurnResult, Dialog, DialogContext } from 'botbuilder-dialogs';
 import { ActionScopeResult, ActionScopeCommands } from './actionScope';
-import { BoolExpression } from 'adaptive-expressions';
+import { BoolExpression, BoolExpressionConverter } from 'adaptive-expressions';
 
 export class BreakLoop<O extends object = {}> extends Dialog<O> {
+    public static $kind = 'Microsoft.BreakLoop';
+
     /**
      * An optional expression which if is true will disable this action.
      */
     public disabled?: BoolExpression;
+
+    public converters = {
+        'disabled': new BoolExpressionConverter()
+    };
 
     public async beginDialog(dc: DialogContext, options?: O): Promise<DialogTurnResult> {
         if (this.disabled && this.disabled.getValue(dc.state)) {
@@ -26,7 +32,7 @@ export class BreakLoop<O extends object = {}> extends Dialog<O> {
 
         return await dc.endDialog(actionScopeResult);
     }
-
+    
     protected onComputeId(): string {
         return `BreakLoop[]`;
     }

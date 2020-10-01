@@ -6,9 +6,11 @@
  * Licensed under the MIT License.
  */
 import { Dialog, DialogContext, DialogTurnResult } from 'botbuilder-dialogs';
-import { StringExpression, BoolExpression } from 'adaptive-expressions';
+import { StringExpression, BoolExpression, BoolExpressionConverter, StringExpressionConverter } from 'adaptive-expressions';
 
 export class GetConversationMembers<O extends object = {}> extends Dialog<O> {
+    public static $kind = 'Microsoft.GetConversationMembers';
+
     public constructor();
     public constructor(property?: string) {
         super();
@@ -24,6 +26,11 @@ export class GetConversationMembers<O extends object = {}> extends Dialog<O> {
      * An optional expression which if is true will disable this action.
      */
     public disabled?: BoolExpression;
+
+    public converters = {
+        'property': new StringExpressionConverter(),
+        'disabled': new BoolExpressionConverter()
+    };
 
     public async beginDialog(dc: DialogContext, options?: O): Promise<DialogTurnResult> {
         if (this.disabled && this.disabled.getValue(dc.state)) {
@@ -44,4 +51,3 @@ export class GetConversationMembers<O extends object = {}> extends Dialog<O> {
         return `GetConversationMembers[${ this.property.toString() }]`;
     }
 }
- 

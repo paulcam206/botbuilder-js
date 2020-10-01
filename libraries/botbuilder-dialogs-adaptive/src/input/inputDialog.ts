@@ -7,12 +7,13 @@
  */
 import { Dialog, DialogContext, DialogTurnResult, DialogEvent, DialogReason, Choice, ListStyle, ChoiceFactoryOptions, ChoiceFactory, DialogEvents, TurnPath } from 'botbuilder-dialogs';
 import { ActivityTypes, Activity, InputHints, MessageFactory } from 'botbuilder-core';
-import { ExpressionParser } from 'adaptive-expressions';
+import { BoolExpressionConverter, ExpressionParser, IntExpressionConverter, StringExpressionConverter, ValueExpressionConverter } from 'adaptive-expressions';
 import { TemplateInterface } from '../template';
 import { ValueExpression, StringExpression, BoolExpression, IntExpression } from 'adaptive-expressions';
 import { AdaptiveEvents } from '../adaptiveEvents';
 import { ActivityTemplate } from '../templates/activityTemplate';
 import { StaticActivityTemplate } from '../templates/staticActivityTemplate';
+import { ActivityTemplateConverter } from '../converters';
 
 export enum InputState {
     missing = 'missing',
@@ -86,16 +87,32 @@ export abstract class InputDialog extends Dialog {
      */
     public disabled?: BoolExpression;
 
+    public get converters() {
+        return {
+            'alwaysPrompt': new BoolExpressionConverter(),
+            'allowInterruptions': new BoolExpressionConverter(),
+            'property': new StringExpressionConverter(),
+            'value': new ValueExpressionConverter(),
+            'prompt': new ActivityTemplateConverter(),
+            'unrecognizedPrompt': new ActivityTemplateConverter(),
+            'invalidPrompt': new ActivityTemplateConverter(),
+            'defaultValueResponse': new ActivityTemplateConverter(),
+            'maxTurnCount': new IntExpressionConverter(),
+            'defaultValue': new ValueExpressionConverter(),
+            'disabled': new BoolExpressionConverter()
+        };
+    }
+
     public constructor(property?: string, prompt?: Partial<Activity> | string) {
         super();
         if (property) {
             this.property = new StringExpression(property);
         }
         if (prompt) {
-            if (typeof prompt === 'string') { 
-                this.prompt = new ActivityTemplate(prompt); 
+            if (typeof prompt === 'string') {
+                this.prompt = new ActivityTemplate(prompt);
             } else {
-                this.prompt = new StaticActivityTemplate(prompt); 
+                this.prompt = new StaticActivityTemplate(prompt);
             }
         }
     }
@@ -157,7 +174,7 @@ export abstract class InputDialog extends Dialog {
                     this.telemetryClient.trackEvent({
                         name: 'GeneratorResult',
                         properties: {
-                            'template':this.defaultValueResponse,
+                            'template': this.defaultValueResponse,
                             'result': response || ''
                         }
                     });
@@ -240,12 +257,12 @@ export abstract class InputDialog extends Dialog {
         this.telemetryClient.trackEvent({
             name: 'GeneratorResult',
             properties: {
-                'template':template,
+                'template': template,
                 'result': msg
             }
         });
 
-        return msg; 
+        return msg;
     }
 
     protected getDefaultInput(dc: DialogContext): any {

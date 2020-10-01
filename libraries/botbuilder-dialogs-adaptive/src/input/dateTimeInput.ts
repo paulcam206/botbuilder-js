@@ -8,13 +8,21 @@
 import * as Recognizers from '@microsoft/recognizers-text-date-time';
 import { DialogContext } from 'botbuilder-dialogs';
 import { InputDialog, InputState } from './inputDialog';
-import { StringExpression } from 'adaptive-expressions';
+import { StringExpression, StringExpressionConverter } from 'adaptive-expressions';
 
 export class DateTimeInput extends InputDialog {
+    public static $kind = 'Microsoft.DateTimeInput';
 
     public defaultLocale: StringExpression;
 
     public outputFormat: StringExpression;
+
+    public get converters() {
+        return Object.assign({}, super.converters, {
+            'defaultLocale': new StringExpressionConverter(),
+            'outputFormat': new StringExpressionConverter()
+        });
+    }
 
     protected onComputeId(): string {
         return `DateTimeInput[${ this.prompt && this.prompt.toString() }]`;

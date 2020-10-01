@@ -7,9 +7,11 @@
  */
 import { DialogTurnResult, DialogContext, Dialog } from 'botbuilder-dialogs';
 import { Activity, ActivityTypes } from 'botbuilder-core';
-import { ValueExpression, StringExpression, BoolExpression } from 'adaptive-expressions';
+import { ValueExpression, StringExpression, BoolExpression, BoolExpressionConverter, StringExpressionConverter, ValueExpressionConverter } from 'adaptive-expressions';
 
 export class TraceActivity<O extends object = {}> extends Dialog<O> {
+    public static $kind = 'Microsoft.TraceActivity';
+
     public constructor();
     public constructor(name: string, valueType: string, value: any, label: string);
     public constructor(name?: string, valueType?: string, value?: any, label?: string) {
@@ -44,6 +46,14 @@ export class TraceActivity<O extends object = {}> extends Dialog<O> {
      * An optional expression which if is true will disable this action.
      */
     public disabled?: BoolExpression;
+
+    public converters = {
+        'name': new StringExpressionConverter(),
+        'valueType': new StringExpressionConverter(),
+        'value': new ValueExpressionConverter(),
+        'label': new StringExpressionConverter(),
+        'disabled': new BoolExpressionConverter()
+    };
 
     public async beginDialog(dc: DialogContext, options?: O): Promise<DialogTurnResult> {
         if (this.disabled && this.disabled.getValue(dc.state)) {

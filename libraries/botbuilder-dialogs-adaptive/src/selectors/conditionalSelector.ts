@@ -5,7 +5,7 @@
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Licensed under the MIT License.
  */
-import { ExpressionParser, ExpressionParserInterface } from 'adaptive-expressions';
+import { BoolExpressionConverter, ExpressionParser, ExpressionParserInterface } from 'adaptive-expressions';
 import { OnCondition } from '../conditions/onCondition';
 import { TriggerSelector } from '../triggerSelector';
 import { BoolExpression } from 'adaptive-expressions';
@@ -15,6 +15,8 @@ import { ActionContext } from '../actionContext';
  * Select between two rule selectors based on a condition.
  */
 export class ConditionalSelector implements TriggerSelector {
+    public static $kind = 'Microsoft.ConditionalSelector';
+
     private _conditionals: OnCondition[];
     private _evaluate: boolean;
 
@@ -37,6 +39,10 @@ export class ConditionalSelector implements TriggerSelector {
      * Gets or sets the expression parser to use.
      */
     public parser: ExpressionParserInterface = new ExpressionParser()
+
+    public converters = {
+        'condition': new BoolExpressionConverter()
+    };
 
     public initialize(conditionals: OnCondition[], evaluate: boolean): void {
         this._conditionals = conditionals;

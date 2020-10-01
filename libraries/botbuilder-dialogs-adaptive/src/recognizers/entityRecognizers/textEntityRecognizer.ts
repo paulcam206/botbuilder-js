@@ -13,6 +13,8 @@ import { EntityRecognizer } from './entityRecognizer';
 import { TextEntity } from './textEntity';
 
 export abstract class TextEntityRecognizer implements EntityRecognizer {
+    public converters = {};
+
     public async recognizeEntities(dialogContext: DialogContext, text: string, locale: string, entities: Entity[]): Promise<Entity[]> {
         const newEntities: Entity[] = [];
         const culture = Culture.mapToNearestLanguage(locale || '');

@@ -13,6 +13,7 @@ export {
 export { BotFrameworkHttpClient } from './botFrameworkHttpClient';
 export { ChannelServiceHandler } from './channelServiceHandler';
 export { ChannelServiceRoutes, RouteHandler, WebServer } from './channelServiceRoutes';
+export * from './componentRegistration';
 export * from './fileTranscriptStore';
 export { HandoffEventNames } from './handoffEventNames';
 export { EventFactory } from './eventFactory';

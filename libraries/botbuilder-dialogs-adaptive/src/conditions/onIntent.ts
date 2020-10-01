@@ -19,6 +19,8 @@ import { ActionChangeType } from '../actionChangeType';
  * Actions triggered when an Activity has been received and the recognized intents and entities match specified list of intent and entity filters.
  */
 export class OnIntent extends OnDialogEvent {
+    public static $kind = 'Microsoft.OnIntent';
+
     /**
      * Gets or sets intent to match on.
      */

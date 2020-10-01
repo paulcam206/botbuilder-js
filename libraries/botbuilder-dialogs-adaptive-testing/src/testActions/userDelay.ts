@@ -15,10 +15,14 @@ export interface UserDelayConfiguration {
 }
 
 export class UserDelay implements TestAction {
+    public static $kind = 'Microsoft.Test.UserDelay';
+
     /**
      * The timespan in milliseconds to delay.
      */
     public timespan: number;
+    
+    public converters = {};
 
     public async execute(_testAdapter: AdaptiveTestAdapter, _callback: (context: TurnContext) => Promise<any>): Promise<any> {
         await Promise.resolve(resolve => setTimeout(resolve, this.timespan));

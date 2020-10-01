@@ -7,9 +7,11 @@
  */
 import { DialogTurnResult, DialogContext, DialogReason, TurnPath } from 'botbuilder-dialogs';
 import { BaseInvokeDialog } from './baseInvokeDialog';
-import { StringExpression, BoolExpression } from 'adaptive-expressions';
+import { StringExpression, BoolExpression, StringExpressionConverter, BoolExpressionConverter } from 'adaptive-expressions';
 
 export class BeginDialog<O extends object = {}> extends BaseInvokeDialog<O> {
+    public static $kind = 'Microsoft.BeginDialog';
+
     /**
      * Creates a new `BeginDialog` instance.
      * @param dialogIdToCall ID of the dialog to call.
@@ -30,6 +32,13 @@ export class BeginDialog<O extends object = {}> extends BaseInvokeDialog<O> {
      * An optional expression which if is true will disable this action.
      */
     public disabled?: BoolExpression;
+
+    public get converters() {
+        return Object.assign({}, super.converters, {
+            'resultProperty': new StringExpressionConverter(),
+            'disabled': new BoolExpressionConverter()
+        });
+    }
 
     public async beginDialog(dc: DialogContext, options?: O): Promise<DialogTurnResult> {
         if (this.disabled && this.disabled.getValue(dc.state)) {

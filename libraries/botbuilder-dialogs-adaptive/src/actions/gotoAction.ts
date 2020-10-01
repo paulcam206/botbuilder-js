@@ -7,9 +7,11 @@
  */
 import { DialogTurnResult, Dialog, DialogContext } from 'botbuilder-dialogs';
 import { ActionScopeResult, ActionScopeCommands } from './actionScope';
-import { StringExpression, BoolExpression } from 'adaptive-expressions';
+import { StringExpression, BoolExpression, BoolExpressionConverter, StringExpressionConverter } from 'adaptive-expressions';
 
 export class GotoAction<O extends object = {}> extends Dialog<O> {
+    public static $kind = 'Microsoft.GotoAction';
+
     public constructor();
     public constructor(actionId?: string) {
         super();
@@ -25,6 +27,11 @@ export class GotoAction<O extends object = {}> extends Dialog<O> {
      * An optional expression which if is true will disable this action.
      */
     public disabled?: BoolExpression;
+
+    public converters = {
+        'actionId': new StringExpressionConverter(),
+        'disabled': new BoolExpressionConverter()
+    };
 
     public async beginDialog(dc: DialogContext, options?: O): Promise<DialogTurnResult> {
         if (this.disabled && this.disabled.getValue(dc.state)) {

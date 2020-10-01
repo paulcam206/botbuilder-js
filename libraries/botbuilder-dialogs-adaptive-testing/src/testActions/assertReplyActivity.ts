@@ -12,6 +12,8 @@ import { TestAction } from '../testAction';
 import { AdaptiveTestAdapter } from '../adaptiveTestAdapter';
 
 export class AssertReplyActivity implements TestAction {
+    public static $kind = 'Microsoft.Test.AssertReplyActivity';
+
     /**
      * Description of what this assertion is.
      */
@@ -26,6 +28,8 @@ export class AssertReplyActivity implements TestAction {
      * The expressions for assertions.
      */
     public assertions: string[];
+
+    public converters = {};
 
     public getConditionDescription(): string {
         return this.description || this.assertions.join('\n');
